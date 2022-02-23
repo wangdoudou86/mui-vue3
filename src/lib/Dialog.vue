@@ -1,19 +1,23 @@
 <template>
   <template v-if="visible">
-    <div class="mui-dialog-overlay" @click="clickOverlay"></div>
-    <div class="mui-dialog-wrapper">
-      <div class="mui-dialog">
-        <header>标题<span class="mui-dialog-close" @click="close"></span></header>
-        <main>
-          <p>第一行</p>
-          <p>第二行</p>
-        </main>
-        <footer>
-          <button @click="ok">ok</button>
-          <button @click="cancel">cancel</button>
-        </footer>
+    <!-- <teleport to="body">
+    </teleport> -->
+      <div class="mui-dialog-overlay" @click="clickOverlay"></div>
+      <div class="mui-dialog-wrapper">
+        <div class="mui-dialog">
+          <header>
+            <slot name="title">提示</slot
+            ><span class="mui-dialog-close" @click="close"></span>
+          </header>
+          <main>
+            <slot name="content" />
+          </main>
+          <footer>
+            <button @click="ok">ok</button>
+            <button @click="cancel">cancel</button>
+          </footer>
+        </div>
       </div>
-    </div>
   </template>
 </template>
 
@@ -22,43 +26,44 @@ export default {
   props: {
     visible: {
       type: Boolean,
-      default: false,
+      default: false
     },
-    closeOnClickOverlay: {   //点击遮罩层是否可以关闭对话框
+    closeOnClickOverlay: {
+      //点击遮罩层是否可以关闭对话框
       type: Boolean,
-      default: false,
+      default: false
     },
-    ok:{
-      type: Function,   //必须选择返回true or false，true则可以关闭，false则不可关闭
+    ok: {
+      type: Function //必须选择返回true or false，true则可以关闭，false则不可关闭
     },
-    cancel:{
-      type: Function,
-    },
-
+    cancel: {
+      type: Function
+    }
   },
   setup(props, context) {
-    const close = ()=>{
-      context.emit('update:visible', false)
-    }
-    const clickOverlay = ()=>{
-      if(props.closeOnClickOverlay){
-        close()
+    const close = () => {
+      context.emit("update:visible", false);
+    };
+    const clickOverlay = () => {
+      if (props.closeOnClickOverlay) {
+        close();
       }
-    }
-    const ok = ()=>{
-      if(props.ok?.()!== false){   //等价于props.ok && props.ok() !== false
-        close()
+    };
+    const ok = () => {
+      if (props.ok?.() !== false) {
+        //等价于props.ok && props.ok() !== false
+        close();
       }
-    }
-    const cancel = ()=>{
-      close()
-    }
+    };
+    const cancel = () => {
+      close();
+    };
     return {
       close,
       clickOverlay,
       ok,
       cancel
-    }
+    };
   }
 };
 </script>
