@@ -1,16 +1,16 @@
 <template>
   <template v-if="visible">
-    <div class="mui-dialog-overlay"></div>
+    <div class="mui-dialog-overlay" @click="clickOverlay"></div>
     <div class="mui-dialog-wrapper">
       <div class="mui-dialog">
-        <header>标题<span class="mui-dialog-close"></span></header>
+        <header>标题<span class="mui-dialog-close" @click="close"></span></header>
         <main>
           <p>第一行</p>
           <p>第二行</p>
         </main>
         <footer>
-          <button>ok</button>
-          <button>cancel</button>
+          <button @click="ok">ok</button>
+          <button @click="cancel">cancel</button>
         </footer>
       </div>
     </div>
@@ -24,7 +24,42 @@ export default {
       type: Boolean,
       default: false,
     },
+    closeOnClickOverlay: {   //点击遮罩层是否可以关闭对话框
+      type: Boolean,
+      default: false,
+    },
+    ok:{
+      type: Function,   //必须选择返回true or false，true则可以关闭，false则不可关闭
+    },
+    cancel:{
+      type: Function,
+    },
+
   },
+  setup(props, context) {
+    const close = ()=>{
+      context.emit('update:visible', false)
+    }
+    const clickOverlay = ()=>{
+      if(props.closeOnClickOverlay){
+        close()
+      }
+    }
+    const ok = ()=>{
+      if(props.ok?.()!== false){   //等价于props.ok && props.ok() !== false
+        close()
+      }
+    }
+    const cancel = ()=>{
+      close()
+    }
+    return {
+      close,
+      clickOverlay,
+      ok,
+      cancel
+    }
+  }
 };
 </script>
 
