@@ -1,6 +1,5 @@
 <template>
   <div>Dialog示例</div>
-  <div style="position: relative; z-index: 1;">
     <h1>示例一</h1>
     <button @click="toggle">toggle</button>
     <Dialog
@@ -16,11 +15,8 @@
         <strong>我是内容</strong>
       </template>
     </Dialog>
-  </div>
 
-  <div
-    style="width: 100px; height: 100px; position: relative; z-index: 2; background: blue;"
-  ></div>
+ 
 </template>
 
 <script lang="ts">
@@ -35,9 +31,13 @@ export default {
       x.value = !x.value;
     };
     const okFn = () => {
-      return true; //必须选择返回true or false，true则可以关闭，false则不可关闭
+      console.log('okokok');
+      return false; //必须选择返回true or false，true则可以关闭，false则不可关闭
     };
-    const cancelFn = () => {};
+    const cancelFn = () => {
+      console.log('cancel');
+      
+    };
 
     return {
       x,

@@ -1,7 +1,6 @@
 <template>
   <template v-if="visible">
-    <!-- <teleport to="body">
-    </teleport> -->
+    <teleport to="body">
       <div class="mui-dialog-overlay" @click="clickOverlay"></div>
       <div class="mui-dialog-wrapper">
         <div class="mui-dialog">
@@ -18,6 +17,7 @@
           </footer>
         </div>
       </div>
+    </teleport>
   </template>
 </template>
 
@@ -33,6 +33,7 @@ export default {
       type: Boolean,
       default: false
     },
+    //回调函数
     ok: {
       type: Function //必须选择返回true or false，true则可以关闭，false则不可关闭
     },
@@ -56,6 +57,7 @@ export default {
       }
     };
     const cancel = () => {
+      props.cancel?.()  //用户传cancel回调，就给他执行出来，不传就不执行呗  
       close();
     };
     return {
