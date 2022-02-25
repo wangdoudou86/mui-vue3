@@ -1,7 +1,7 @@
 <template>
   <div class="example">
     <h1>示例一</h1>
-    <button @click="toggle">toggle</button>
+    <Button @click="toggle">toggle</Button>
     <Dialog
       v-model:visible="x"
       :closeOnClickOverlay="false"
@@ -20,17 +20,18 @@
   <div class="example">
     <h1>示例二</h1>
     <div class="decorate">使用一句话打开Dialog</div>
-    <button @click="showDialog">open dialog</button>
+    <Button @click="showDialog">open dialog</Button>
   </div>
 </template>
 
 <script lang="ts">
 import { ref } from "vue";
 import Dialog from "../lib/Dialog.vue";
+import Button from "../lib/Button.vue";
 import { openDialog } from "../lib/openDialog";
 
 export default {
-  components: { Dialog },
+  components: { Dialog, Button },
   setup() {
     const x = ref(false);
     const toggle = () => {

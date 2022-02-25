@@ -12,8 +12,8 @@
             <slot name="content" />
           </main>
           <footer>
-            <button @click="ok">ok</button>
-            <button @click="cancel">cancel</button>
+            <Button @click="ok" level='main'>ok</Button>
+            <Button @click="cancel">cancel</Button>
           </footer>
         </div>
       </div>
@@ -22,7 +22,9 @@
 </template>
 
 <script lang="ts">
+import Button from "./Button.vue";
 export default {
+  components: { Button },
   props: {
     visible: {
       type: Boolean,
