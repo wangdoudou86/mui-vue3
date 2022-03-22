@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { computed, onMounted, onUpdated, ref, watch } from "vue";
+import { computed, onMounted, ref, watchEffect } from "vue";
 import Tab from "./Tab.vue";
 export default {
   props: {
@@ -37,17 +37,18 @@ export default {
     const selectedItem = ref<HTMLDivElement>(null);
     const indicator = ref<HTMLDivElement>(null);
     const container = ref<HTMLDivElement>(null);
-    const x = ()=>{
+    
+    onMounted(()=>{
+      //watchEffect若不写在onMounted里，是获取不到DOM元素的
+      watchEffect(()=>{
       const { width, left: left2 } = selectedItem.value.getBoundingClientRect();
       const {left: left1} = container.value.getBoundingClientRect()
       const left = left2 - left1
 
       indicator.value.style.width = width + "px";
       indicator.value.style.left = left + 'px'
-    }
-    onMounted(x);
-
-    onUpdated(x)
+    })
+    });
 
     defaults.forEach((tag) => {
       if (tag.type !== Tab) {
