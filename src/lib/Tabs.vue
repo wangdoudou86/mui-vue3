@@ -7,10 +7,15 @@
         v-for="(t, index) in titles"
         :key="index"
         @click="changeTab(t)"
+        :ref="
+          (el) => {
+            if (el) titleDivs[index] = el;
+          }
+        "
       >
         {{ t }}
       </div>
-    <div class="mui-tabs-indicator"></div>
+      <div class="mui-tabs-indicator" ref="indicator"></div>
     </div>
     <div class="mui-tabs-content">
       <component
@@ -23,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { computed, watch } from 'vue';
+import { computed, onMounted, ref, watch } from "vue";
 import Tab from "./Tab.vue";
 export default {
   props: {
@@ -32,10 +37,15 @@ export default {
     },
   },
   setup(props, context) {
-    console.log(props, 'props');
-    
     const defaults = context.slots.default();
-
+    const titleDivs = ref<HTMLDivElement[]>([]); // title的ref，<HTMLDivElement[]>是指这是一个元素类型为HTMLDivElement的数组
+    const indicator = ref<HTMLDivElement>(null)
+    onMounted(() => {
+      console.log({ ...titleDivs.value }, "ccc");
+      const result = titleDivs.value.find((div)=> div.classList.contains('selected'))
+      const {width} = result.getBoundingClientRect()
+      indicator.value.style.width = width + 'px'
+    });
     defaults.forEach((tag) => {
       if (tag.type !== Tab) {
         throw new Error("Tabs 子标签必须是 Tab");
@@ -43,8 +53,7 @@ export default {
     });
 
     const current = computed(() => {
-      console.log("重新 return");
-      return defaults.find(tag => tag.props.title === props.selected)
+      return defaults.find((tag) => tag.props.title === props.selected);
     });
 
     const titles = defaults.map((tag) => {
@@ -55,7 +64,7 @@ export default {
       context.emit("update:selected", title);
     };
 
-    return { defaults, titles, current, changeTab};
+    return { defaults, titles, current, changeTab, titleDivs,indicator };
   },
 };
 </script>
@@ -81,11 +90,10 @@ $border-color: #d9d9d9;
       }
     }
   }
-  &-indicator{
+  &-indicator {
     position: absolute;
     bottom: -1px;
     left: 0;
-    width: 50px;
     height: 3px;
     background-color: $blue;
   }
