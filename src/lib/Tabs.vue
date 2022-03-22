@@ -1,6 +1,6 @@
 <template>
   <div class="mui-tabs">
-    <div class="mui-tabs-nav">
+    <div class="mui-tabs-nav" ref="container">
       <div
         class="mui-tabs-nav-item"
         :class="{ selected: t === selected }"
@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, onUpdated, ref, watch } from "vue";
 import Tab from "./Tab.vue";
 export default {
   props: {
@@ -39,13 +39,23 @@ export default {
   setup(props, context) {
     const defaults = context.slots.default();
     const titleDivs = ref<HTMLDivElement[]>([]); // title的ref，<HTMLDivElement[]>是指这是一个元素类型为HTMLDivElement的数组
-    const indicator = ref<HTMLDivElement>(null)
-    onMounted(() => {
-      console.log({ ...titleDivs.value }, "ccc");
-      const result = titleDivs.value.find((div)=> div.classList.contains('selected'))
-      const {width} = result.getBoundingClientRect()
-      indicator.value.style.width = width + 'px'
-    });
+    const indicator = ref<HTMLDivElement>(null);
+    const container = ref<HTMLDivElement>(null);
+    const x = ()=>{
+      const result = titleDivs.value.find((div) =>
+        div.classList.contains("selected")
+      );
+      const { width, left: left2 } = result.getBoundingClientRect();
+      const {left: left1} = container.value.getBoundingClientRect()
+      const left = left2 - left1
+
+      indicator.value.style.width = width + "px";
+      indicator.value.style.left = left + 'px'
+    }
+    onMounted(x);
+
+    onUpdated(x)
+
     defaults.forEach((tag) => {
       if (tag.type !== Tab) {
         throw new Error("Tabs 子标签必须是 Tab");
@@ -64,7 +74,15 @@ export default {
       context.emit("update:selected", title);
     };
 
-    return { defaults, titles, current, changeTab, titleDivs,indicator };
+    return {
+      defaults,
+      titles,
+      current,
+      changeTab,
+      titleDivs,
+      indicator,
+      container,
+    };
   },
 };
 </script>
@@ -92,10 +110,11 @@ $border-color: #d9d9d9;
   }
   &-indicator {
     position: absolute;
-    bottom: -1px;
+    bottom: -2px;
     left: 0;
     height: 3px;
     background-color: $blue;
+    transition: all .5s;
   }
   &-content {
     padding: 8px 0;

@@ -3,8 +3,8 @@
     <h1>示例一</h1>
     <Tabs :selected="selectedTab" @update:selected = 'selectedTab = $event'>
       <Tab title="导航1">内容一</Tab>
-      <Tab title="导航2">内容二</Tab>
-      <Tab title="导航3">内容三</Tab>
+      <Tab title="导航222222">内容二</Tab>
+      <Tab title="导航333">内容三</Tab>
     </Tabs>
   </div>
 </template>
