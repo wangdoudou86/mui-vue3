@@ -7,11 +7,7 @@
         v-for="(t, index) in titles"
         :key="index"
         @click="changeTab(t)"
-        :ref="
-          (el) => {
-            if (el) titleDivs[index] = el;
-          }
-        "
+        :ref="(el)=> {if(t === selected) selectedItem = el}"
       >
         {{ t }}
       </div>
@@ -38,14 +34,11 @@ export default {
   },
   setup(props, context) {
     const defaults = context.slots.default();
-    const titleDivs = ref<HTMLDivElement[]>([]); // title的ref，<HTMLDivElement[]>是指这是一个元素类型为HTMLDivElement的数组
+    const selectedItem = ref<HTMLDivElement>(null);
     const indicator = ref<HTMLDivElement>(null);
     const container = ref<HTMLDivElement>(null);
     const x = ()=>{
-      const result = titleDivs.value.find((div) =>
-        div.classList.contains("selected")
-      );
-      const { width, left: left2 } = result.getBoundingClientRect();
+      const { width, left: left2 } = selectedItem.value.getBoundingClientRect();
       const {left: left1} = container.value.getBoundingClientRect()
       const left = left2 - left1
 
@@ -79,9 +72,9 @@ export default {
       titles,
       current,
       changeTab,
-      titleDivs,
       indicator,
       container,
+      selectedItem
     };
   },
 };
